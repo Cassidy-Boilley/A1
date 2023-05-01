@@ -28,7 +28,7 @@ const node_session_secret = process.env.NODE_SESSION_SECRET;
 
 var {database} = include('dbconnect.js');
 
-const userCollection = database.db(mongodb_database).collection('users');
+const userCollection = database.db(mongodb_database).collection('sessions');
 
 app.use(express.urlencoded({extended: false}));
 
@@ -59,6 +59,7 @@ app.get('/signup', (req, res) => {
     SIgn Up
     <form action='/signup' method='post'>
     <input name='username' type='text' placeholder='username'>
+    <input name='email' type='text' placeholder='email'>
     <input name='password' type='password' placeholder='password'>
     <button>Submit</button>
     </form>
@@ -69,7 +70,7 @@ app.get('/signup', (req, res) => {
 app.get('/login', (req,res) => {
     var html = `
     Log In
-    <form action='/loggingin' method='post'>
+    <form action='/login' method='post'>
     <input name='username' type='text' placeholder='username'>
     <input name='password' type='password' placeholder='password'>
     <button>Submit</button>
@@ -78,44 +79,34 @@ app.get('/login', (req,res) => {
     res.send(html);
 });
 
-app.get('/about', (req,res) => {
-    var color = req.query.color;
-
-    res.send("<h1 style='color:"+color+";'>Cassidy Boilley </h1>");
-});
-
-app.get('/contact', (req,res) => {
-    var missingEmail = req.query.missing;
+app.get('/members', (req,res) => {
     var html = `
-        email address:
-        <form action='/submitEmail' method='post'>
-            <input name='email' type='text' placeholder='email'>
-            <button>Submit</button>
-        </form>
+    Log In
+    <form action='/login' method='post'>
+    <input name='username' type='text' placeholder='username'>
+    <input name='password' type='password' placeholder='password'>
+    <button>Submit</button>
+    </form>
     `;
-    if (missingEmail) {
-        html += "<br> email is required";
-    }
     res.send(html);
 });
 
-app.post('/submitEmail', (req,res) => {
-    var email = req.body.email;
-    if (!email) {
-        res.redirect('/contact?missing=1');
-    }
-    else {
-        res.send("Thanks for subscribing with your email: "+email);
-    }
+app.get('/logout', (req,res) => {
+    res.session.destroy();
+    res.redirect('/');
 });
+
 
 app.post('/signup', async (req,res) => {
     var username = req.body.username;
+    var email = req.body.email;
     var password = req.body.password;
+    
 
 	const schema = Joi.object(
 		{
-			username: Joi.string().alphanum().max(20).required(),
+            username: Joi.string().alphanum().max(20).required(),
+            email: Joi.string().email().required(),
 			password: Joi.string().max(20).required()
 		});
 	
@@ -128,82 +119,25 @@ app.post('/signup', async (req,res) => {
 
     var hashedPassword = await bcrypt.hash(password, saltRounds);
 	
-	await userCollection.insertOne({username: username, password: hashedPassword});
+	await userCollection.insertOne({username: username, email: email ,password: hashedPassword});
 	console.log("Inserted user");
 
     var html = "successfully created user";
     res.send(html);
 });
 
-app.post('/loggingin', async (req,res) => {
-    var username = req.body.username;
-    var password = req.body.password;
+app.post('/login', (req, res) => {
+  // set a global variable to true if the user is authenticated
+  if (users.find((user) => user.username == req.body.username && user.password == req.body.password)) {
+    req.session.GLOBAL_AUTHENTICATED = true;
+    req.session.loggedUsername = req.body.username;
+    req.session.loggedPassword = req.body.password;
+  }
+  res.redirect('/');
 
-	const schema = Joi.string().max(20).required();
-	const validationResult = schema.validate(username);
-	if (validationResult.error != null) {
-	   console.log(validationResult.error);
-	   res.redirect("/login");
-	   return;
-	}
-
-	const result = await userCollection.find({username: username}).project({username: 1, password: 1, _id: 1}).toArray();
-
-	console.log(result);
-	if (result.length != 1) {
-		console.log("user not found");
-		res.redirect("/login");
-		return;
-	}
-	if (await bcrypt.compare(password, result[0].password)) {
-		console.log("correct password");
-		req.session.authenticated = true;
-		req.session.username = username;
-		req.session.cookie.maxAge = expireTime;
-
-		res.redirect('/loggedIn');
-		return;
-	}
-	else {
-		console.log("incorrect password");
-		res.redirect("/login");
-		return;
-	}
-});
-
-app.get('/loggedin', (req,res) => {
-    if (!req.session.authenticated) {
-        res.redirect('/login');
-    }
-    var html = `
-    You are logged in!
-    `;
-    res.send(html);
-});
-
-app.get('/logout', (req,res) => {
-	req.session.destroy();
-    var html = `
-    You are logged out.
-    `;
-    res.send(html);
 });
 
 
-app.get('/cat/:id', (req,res) => {
-
-    var cat = req.params.id;
-
-    if (cat == 1) {
-        res.send("Fluffy: <img src='/cat1.jpg' style='width:250px;'>");
-    }
-    else if (cat == 2) {
-        res.send("Socks: <img src='/cat2.webp' style='width:250px;'>");
-    }
-    else {
-        res.send("Invalid cat id: "+cat);
-    }
-});
 
 
 app.use(express.static(__dirname + "/public"));
