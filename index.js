@@ -26,7 +26,7 @@ const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 /* END secret section */
 
-var {database} = include('databaseConnection');
+var {database} = include('dbConnect.js');
 
 const userCollection = database.db(mongodb_database).collection('users');
 
