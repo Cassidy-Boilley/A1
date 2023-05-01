@@ -49,7 +49,8 @@ app.use(session({
 ));
 
 app.get('/', (req,res) => {
-    res.send("<h1>Hello World!</h1>");
+    res.send(`<a href='/login'></a>
+    <a href='/signup'></a>"`);
 });
 
 // Create a new user
