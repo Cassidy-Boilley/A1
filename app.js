@@ -3,10 +3,8 @@ const app = express();
 const session = require('express-session');
 const usersModel = require('./models/users');
 const bcrypt = require('bcrypt');
-
+const Joi = require('joi');
 var MongoDBStore = require('connect-mongodb-session')(session);
-
-
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -28,7 +26,11 @@ app.use(session({
 
 // public routes
 app.get('/', (req, res) => {
-  res.send('<h1> Hello World </h1>');
+  if (!req.isAuthenticated) {
+    res.send(`<a href='/login' class='button'> Login </a> <br> <a href='/signup' class='button'> Signup </a>`);
+  }
+  
+  
 });
 
 
@@ -43,10 +45,21 @@ app.get('/login', (req, res) => {
 
 });
 
+app.get('/signup', (req, res) => {
+  res.send(`
+    <form action="/signup" method="post">
+      <input type="text" name="username" placeholder="Enter your username" />
+      <input type="password" name="password" placeholder="Enter your password" />
+      <input type="submit" value="Signup" />
+    </form>
+  `)
+
+});
+
 // GLOBAL_AUTHENTICATED = false;
 app.use(express.urlencoded({ extended: false }))
 // built-in middleware function in Express. It parses incoming requests with urlencoded payloads and is based on body-parser.
-const Joi = require('joi');
+
 app.use(express.json()) // built-in middleware function in Express. It parses incoming requests with JSON payloads and is based on body-parser.
 app.post('/login', async (req, res) => {
   // set a global variable to true if the user is authenticated
