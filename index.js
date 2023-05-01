@@ -56,7 +56,7 @@ app.get('/', (req,res) => {
 // Create a new user
 app.get('/signup', (req, res) => {
   const html = `
-    create user
+    SIgn Up
     <form action='/signup' method='post'>
     <input name='username' type='text' placeholder='username'>
     <input name='password' type='password' placeholder='password'>
@@ -64,6 +64,18 @@ app.get('/signup', (req, res) => {
     </form>
   `;
   res.send(html);
+});
+
+app.get('/login', (req,res) => {
+    var html = `
+    Log In
+    <form action='/loggingin' method='post'>
+    <input name='username' type='text' placeholder='username'>
+    <input name='password' type='password' placeholder='password'>
+    <button>Submit</button>
+    </form>
+    `;
+    res.send(html);
 });
 
 app.get('/about', (req,res) => {
@@ -97,33 +109,7 @@ app.post('/submitEmail', (req,res) => {
     }
 });
 
-
-app.get('/createUser', (req,res) => {
-    var html = `
-    create user
-    <form action='/submitUser' method='post'>
-    <input name='username' type='text' placeholder='username'>
-    <input name='password' type='password' placeholder='password'>
-    <button>Submit</button>
-    </form>
-    `;
-    res.send(html);
-});
-
-
-app.get('/login', (req,res) => {
-    var html = `
-    log in
-    <form action='/loggingin' method='post'>
-    <input name='username' type='text' placeholder='username'>
-    <input name='password' type='password' placeholder='password'>
-    <button>Submit</button>
-    </form>
-    `;
-    res.send(html);
-});
-
-app.post('/submitUser', async (req,res) => {
+app.post('/signup', async (req,res) => {
     var username = req.body.username;
     var password = req.body.password;
 
