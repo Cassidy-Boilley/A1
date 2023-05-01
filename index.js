@@ -28,7 +28,7 @@ const node_session_secret = process.env.NODE_SESSION_SECRET;
 
 var {database} = include('dbconnect.js');
 
-const userCollection = database.db(mongodb_database).collection('sessions');
+const userCollection = database.db(mongodb_database).collection('./test/sessions/users');
 
 app.use(express.urlencoded({extended: false}));
 
