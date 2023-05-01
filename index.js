@@ -48,10 +48,9 @@ app.use(session({
 }
 ));
 
-app.get('/', (req, res) => {
-    const html = `<a href='/login'></a>
-    <a href='/signup'></a>"`
-    res.send(html);
+app.get('/', (req,res) => {
+    res.send(`<a href='/login'>Login</a>
+    <a href='/signup'>Signup</a>"`);
 });
 
 // Create a new user
