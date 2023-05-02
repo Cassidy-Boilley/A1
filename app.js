@@ -88,7 +88,8 @@ app.post('/login', async (req, res) => {
 
   try {
     const result = await usersModel.findOne({
-      email: req.body.email
+      email: req.body.email,
+      name: req.body.name
     })
     if (result === null) {
       res.send(`
