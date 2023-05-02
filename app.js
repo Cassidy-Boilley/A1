@@ -28,6 +28,7 @@ app.get('/', (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
     res.send(`<a href='/login' class='button'> Login </a> <br> <a href='/signup' class='button'> Signup </a>`);
   } else {
+    console.log(req.session);
     res.send(`
     <h1> Welcome ${req.session.loggedUsername} </h1>
     <br>
@@ -89,7 +90,7 @@ app.post('/login', async (req, res) => {
   try {
     const result = await usersModel.findOne({
       email: req.body.email,
-      name: req.body.name
+    
     })
     if (result === null) {
       res.send(`
