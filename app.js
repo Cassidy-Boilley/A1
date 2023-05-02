@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
   res.send(`
     <form action="/login" method="post">
-      <input type="text" name="username" placeholder="Enter your username" />
+      <input type="text" name="name" placeholder="Enter your username" />
       <input type="password" name="password" placeholder="Enter your password" />
       <input type="submit" value="Login" />
     </form>
@@ -52,7 +52,7 @@ app.get('/login', (req, res) => {
 app.get('/signup', (req, res) => {
   res.send(`
     <form action="/signup" method="post">
-      <input type="text" name="username" placeholder="Enter your username" />
+      <input type="text" name="name" placeholder="Enter your username" />
       <input type="text" name="email" placeholder="Enter your email" />
       <input type="text" name="password" placeholder="Enter your password" />
       <input type="submit" value="Signup" />
@@ -98,7 +98,7 @@ app.post('/login', async (req, res) => {
 
       // set a global variable to true if the user is authenticated
       req.session.GLOBAL_AUTHENTICATED = true;
-      req.session.loggedUsername = req.body.username;
+      req.session.loggedUsername = req.body.name;
       req.session.loggedEmail = req.body.email;
       req.session.loggedPassword = req.body.password;
 
@@ -132,7 +132,7 @@ app.post('/signup', async (req, res) => {
     } catch (err) {
         res.send(`
         <h1> ${err.details[0].message} </h1>
-        <a href='/signup'"> Try again. </a>
+        <a href='/signup'class='button'> Try again. </a>
         `)
         return;
     };
@@ -153,7 +153,7 @@ app.post('/signup', async (req, res) => {
         } else {
             res.send(`
             <h1> Email already exists. </h1>
-            <a href='/signup'"> Try again. </a>
+            <a href='/signup' class='button'> Try again. </a>
             `);
         }
     } catch (err) {
