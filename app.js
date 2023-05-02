@@ -177,6 +177,11 @@ app.use(authenticatedOnly);
 
 app.use(express.static('public')) 
 
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
+
 app.get('/members', (req, res) => {
   if(req.session.GLOBAL_AUTHENTICATED){
     const randomImageNumber = Math.floor(Math.random() * 3) + 1;
