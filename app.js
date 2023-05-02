@@ -11,13 +11,10 @@ dotenv.config();
 app.use(express.urlencoded({ extended: false }));
 
 var dbStore = new MongoDBStore({
-  // uri: 'mongodb://localhost:27017/connect_mongodb_session_test',
   uri: process.env.MONGODB_CONNECTION_STRING,
   collection: 'sessions'
 });
 
-
-// replace the in-memory array session store with a database session store
 app.use(session({
   secret: `${MONGODB_SESSION_SECRET}`,
   store: dbStore,
@@ -82,7 +79,6 @@ app.get('/members', (req, res) => {
   
 });
 
-app.use(express.json())
 app.post('/login', async (req, res) => {
   
   // sanitize the input using Joi
