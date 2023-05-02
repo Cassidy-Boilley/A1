@@ -194,22 +194,6 @@ app.use(authenticatedOnly);
 
 app.use(express.static('public')) // built-in middleware function in Express. It serves static files and is based on serve-static.
 
-app.get('/protectedRoute', (req, res) => {
-  // serve one of the three images randomly
-  // generate a random number between 1 and 3
-  const randomImageNumber = Math.floor(Math.random() * 3) + 1;
-  const imageName = `00${randomImageNumber}.png`;
-  HTMLResponse = `
-    <h1> Protected Route </h1>
-    <br>
-    <img src="${imageName}" />
-    `
-  res.send(HTMLResponse);
-});
-
-
-
-
 app.get('*', (req, res) => {
   res.status(404).send('<h1> 404 Page not found</h1>');
 });
