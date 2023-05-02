@@ -67,7 +67,7 @@ app.post('/login', async (req, res) => {
   
   // sanitize the input using Joi
   const schema = Joi.object({
-    email: Joi.string.email.required(),
+    email: Joi.string().email.required(),
     password: Joi.string().max(20).required()
   })
 
