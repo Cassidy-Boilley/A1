@@ -125,7 +125,7 @@ app.post('/login', async (req, res) => {
 app.post('/signup', async (req, res) => {
     try {
         const schema = Joi.object({
-            name: Joi.string().regex(/^[\w\-\s]+$/).max(20).required(),
+            name: Joi.string().max(20).required(),
             email: Joi.string().email().required(),
             password: Joi.string().max(20).required()
         });
