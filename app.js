@@ -192,6 +192,7 @@ app.get('/members', (req, res) => {
       <br>
     
       <img src="${imageName}" />
+      <a href='/logout' class='button'> Logout </a>
       `)
   } else {
     res.redirect('/');
