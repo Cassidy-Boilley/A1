@@ -26,14 +26,14 @@ app.use(session({
 // public routes
 app.get('/', (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
-    res.send(`<a href='/login' class='button'> Login </a> <br> <a href='/signup' class='button'> Signup </a>`);
+    res.send(`<button><a href='/login' class='button'> Login </a></button> <br> <button><a href='/signup' class='button'> Signup </a></button>`);
   } else {
     console.log(req.session);
     res.send(`
     <h1> Welcome ${req.session.loggedUsername} </h1>
     <br>
     <a href='/members' class='button'> Go to members area </a>
-    <a href='/logout' class='button'> Logout </a>
+    <button><a href='/logout' class='button'> Logout </a></button>
   `)
   
   }
@@ -82,7 +82,7 @@ app.post('/login', async (req, res) => {
     res.send(`
       <h1> ${err.details[0].message} </h1>
       <br>
-      <a href='/login' class='button'> Try Again </a>
+      <button><a href='/login' class='button'> Try Again </a></button>
       `)
     return
   }
@@ -95,7 +95,7 @@ app.post('/login', async (req, res) => {
     if (result === null) {
       res.send(`
             <h1> Invalid email or password </h1>
-            <a href='/login' class='button'> Try again. </a>
+            <button><a href='/login' class='button'> Try again. </a></button>
             `)
     } else if (bcrypt.compareSync(req.body.password, result?.password)) {
 
@@ -114,7 +114,7 @@ app.post('/login', async (req, res) => {
     } else {
       res.send( 
         `<h1> Invalid email or password </h1>
-        <a href='/login' class='button'> Try again. </a>
+        <button><a href='/login' class='button'> Try again. </a></button>
       `)
     }
 
@@ -135,7 +135,7 @@ app.post('/signup', async (req, res) => {
     } catch (err) {
         res.send(`
         <h1> ${err.details[0].message} </h1>
-        <a href='/signup'class='button'> Try again. </a>
+        <button><a href='/signup'class='button'> Try again. </a></button>
         `)
         return;
     };
@@ -156,7 +156,8 @@ app.post('/signup', async (req, res) => {
         } else {
             res.send(`
             <h1> Email already exists. </h1>
-            <a href='/signup' class='button'> Try again. </a>
+            <br>
+            <button><a href='/signup'> Try again. </a></button>
             `);
         }
     } catch (err) {
@@ -190,7 +191,6 @@ app.get('/members', (req, res) => {
     res.send(`
       <h1> Hello ${req.session.loggedUsername} </h1>
       <br>
-    
       <img src="${imageName}" />
       <a href='/logout' class='button'> Logout </a>
       `)
