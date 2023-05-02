@@ -185,12 +185,12 @@ app.get('/logout', (req, res) => {
 app.get('/members', (req, res) => {
   if(req.session.GLOBAL_AUTHENTICATED){
     const randomImageNumber = Math.floor(Math.random() * 3) + 1;
+    const imageName = `00${randomImageNumber}.png`
 
     res.send(`
       <h1> Hello ${req.session.name} </h1>
       <br>
       
-      const imageName = 00${randomImageNumber}.png
       <h1> Protected Route </h1>
       <br>
       <img src="./public/${imageName}" />
