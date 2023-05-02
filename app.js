@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
   res.send(`
     <form action="/login" method="post">
-      <input type="text" name="name" placeholder="Enter your username" />
+      <input type="text" name="email" placeholder="Enter your Email" />
       <input type="password" name="password" placeholder="Enter your password" />
       <input type="submit" value="Login" />
     </form>
