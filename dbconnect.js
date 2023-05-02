@@ -1,10 +1,9 @@
-
-
 const mongoose = require('mongoose');
 const app = require('./app');
 require('dotenv').config();
 
 main().catch(err => console.log(err));
+
 async function main() {
   await mongoose.connect(`${process.env.MONGODB_CONNECTION_STRING}`);
   console.log("connected to db");
