@@ -122,7 +122,7 @@ app.post('/login', async (req, res) => {
       req.session.cookie.expires = new Date(Date.now() + (hour));
       eq.session.cookie.maxAge = hour;
 
-      res.redirect('/');
+      res.redirect('/members');
 
     } else {
       res.send( 
