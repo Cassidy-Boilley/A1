@@ -73,7 +73,7 @@ app.post('/login', async (req, res) => {
 
   try {
     console.log("req.body.password " + req.body.password);
-    const validation = await schema.validateAsync({ password: req.body.password });
+    const validation = await schema.validateAsync({ email: req.body.email, password: req.body.password });
   }
   catch (err) {
     console.log(err);
