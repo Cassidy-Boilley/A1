@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
     res.send(`<a href='/login' class='button'> Login </a> <br> <a href='/signup' class='button'> Signup </a>`);
   } else {
     res.send(`
-    <h1> Welcome ${req.session.username} </h1>
+    <h1> Welcome ${req.session.loggedUsername} </h1>
     <br>
     <a href='/members' class='button'> Go to members area </a>
     <a href='/logout' class='button'> Logout </a>
