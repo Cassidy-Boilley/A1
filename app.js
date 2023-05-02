@@ -188,10 +188,9 @@ app.get('/members', (req, res) => {
     const imageName = `00${randomImageNumber}.png`
 
     res.send(`
-      <h1> Hello ${req.session.name} </h1>
+      <h1> Hello ${req.session.loggedUsername} </h1>
       <br>
       
-      <h1> Protected Route </h1>
       <br>
       <img src="./public/${imageName}" />
       `)
