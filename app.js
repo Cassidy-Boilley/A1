@@ -190,9 +190,8 @@ app.get('/members', (req, res) => {
     res.send(`
       <h1> Hello ${req.session.loggedUsername} </h1>
       <br>
-      
-      <br>
-      <img src="./public/${imageName}" />
+    
+      <img src="${imageName}" />
       `)
   } else {
     res.redirect('/');
