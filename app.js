@@ -15,11 +15,12 @@ var dbStore = new MongoDBStore({
   collection: 'sessions'
 });
 
-app.use(session({
+app.use(sessions({
   secret: `${process.env.MONGODB_SESSION_SECRET}`,
   store: dbStore,
   resave: false,
   saveUninitialized: false,
+  expires: new Date(Date.now() + 3600000)
 }));
 
 // public routes
@@ -60,24 +61,7 @@ app.get('/signup', (req, res) => {
 
 });
 
-app.get('/members', (req, res) => {
-  if(req.session.GLOBAL_AUTHENTICATED){
-    const randomImageNumber = Math.floor(Math.random() * 3) + 1;
 
-    res.send(`
-      <h1> Hello ${req.session.username} </h1>
-      <br>
-      
-      const imageName = 00${randomImageNumber}.png
-      <h1> Protected Route </h1>
-      <br>
-      <img src="./public/${imageName}" />
-      `)
-  } else {
-    res.redirect('/');
-  }
-  
-});
 
 app.post('/login', async (req, res) => {
   
@@ -192,7 +176,26 @@ const authenticatedOnly = (req, res, next) => {
 };
 app.use(authenticatedOnly);
 
-app.use(express.static('public')) // built-in middleware function in Express. It serves static files and is based on serve-static.
+app.use(express.static('public')) 
+
+app.get('/members', (req, res) => {
+  if(req.session.GLOBAL_AUTHENTICATED){
+    const randomImageNumber = Math.floor(Math.random() * 3) + 1;
+
+    res.send(`
+      <h1> Hello ${req.session.username} </h1>
+      <br>
+      
+      const imageName = 00${randomImageNumber}.png
+      <h1> Protected Route </h1>
+      <br>
+      <img src="./public/${imageName}" />
+      `)
+  } else {
+    res.redirect('/');
+  }
+  
+});
 
 app.get('*', (req, res) => {
   res.status(404).send('<h1> 404 Page not found</h1>');
