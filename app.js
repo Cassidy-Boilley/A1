@@ -99,7 +99,7 @@ app.post('/login', async (req, res) => {
 
       // set a global variable to true if the user is authenticated
       req.session.GLOBAL_AUTHENTICATED = true;
-      req.session.loggedUsername = req.body.name;
+      req.session.loggedUsername = result.name;
       req.session.loggedEmail = req.body.email;
       req.session.loggedPassword = req.body.password;
 
