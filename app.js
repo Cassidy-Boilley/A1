@@ -164,10 +164,6 @@ app.post('/signup', async (req, res) => {
 });
 
 
-app.get('*', (req, res) => {
-  res.status(404).send('<h1> 404 Page not found</h1>');
-});
-
 // only for authenticated users
 const authenticatedOnly = (req, res, next) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
@@ -184,7 +180,7 @@ app.get('/members', (req, res) => {
     const randomImageNumber = Math.floor(Math.random() * 3) + 1;
 
     res.send(`
-      <h1> Hello ${req.session.username} </h1>
+      <h1> Hello ${req.session.name} </h1>
       <br>
       
       const imageName = 00${randomImageNumber}.png
