@@ -77,6 +77,7 @@ app.post('/login', async (req, res) => {
   }
   catch (err) {
     console.log(err);
+    console.log(req.body.email)
     res.send(`
       <h1> ${err.details[0].message} </h1>
       <br>
