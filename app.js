@@ -105,7 +105,7 @@ app.post('/login', async (req, res) => {
 
       var hour = 3600000;
       req.session.cookie.expires = new Date(Date.now() + (hour));
-      eq.session.cookie.maxAge = hour;
+      req.session.cookie.maxAge = hour;
 
       res.redirect('/members');
 
