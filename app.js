@@ -15,7 +15,7 @@ var dbStore = new MongoDBStore({
   collection: 'sessions'
 });
 
-app.use(sessions({
+app.use(session({
   secret: `${process.env.MONGODB_SESSION_SECRET}`,
   store: dbStore,
   resave: false,
