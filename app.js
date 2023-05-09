@@ -155,16 +155,6 @@ app.post('/signup', async (req, res) => {
     }
 });
 
-
-// only for authenticated users
-const authenticatedOnly = (req, res, next) => {
-  if (!req.session.GLOBAL_AUTHENTICATED) {
-    return res.status(401).json({ error: 'not authenticated' });
-  }
-  next(); // allow the next route to run
-};
-app.use(authenticatedOnly);
-
 app.use(express.static('public')) 
 
 app.get('/logout', (req, res) => {
@@ -175,16 +165,15 @@ app.get('/logout', (req, res) => {
 app.get('/admin', async(req, res) => {
   const result = await usersModel.find({});
   if (!req.session.GLOBAL_AUTHENTICATED) {
-    res.redirect('/login');
-  } else if (req.session.loggedType == "admin") {
+    res.redirect('/login'); 
 
+  } else if (req.session.loggedType == "admin") {
     res.render('admin.ejs', {
       users: result
     });
+
   } else {
-    res.send(`
-  Not authorized to view this page.
-     `);
+    res.status(403).send('<h1> You are not authorized</h1>');
   }
  
 });

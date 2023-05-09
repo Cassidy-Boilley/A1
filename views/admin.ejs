@@ -13,27 +13,9 @@
 <body>
     <%- include('templates/header'); %>
 
-    <% users.forEach(user=> {%>
-        <div class="container p-3">
-            <tr>
-                <td>
-                    <%= user.name %> (<%= user.type %>)
-                    
-                        <form action="/admin/promote" method="post" class="d-inline">
-                            <input type="hidden" name="userId" value="<%= user._id %>">
-                            <button class="btn btn-success" value="admin" <%= user.type="admin"? "selected" : "" %> >Promote to Admin</button>
-                        </form>
-                        <form action="/admin/demote" method="post" class="d-inline">
-                            <input type="hidden" name="userId" value="<%= user._id %>">
-                            <button class="btn btn-danger" value="user" <%= user.type="user" ? "selected" : "" %> >Demote to User</button>
-                        </form>
-                </td>
-            </tr>
-        </div>
-        <%})%>
+    <%- include('templates/user'); %>
 
-
-    <%- include('templates/footer.ejs'); %>
+    <%- include('templates/footer'); %>
 
 
 </body>
