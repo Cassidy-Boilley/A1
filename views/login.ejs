@@ -2,10 +2,12 @@
 <html lang="en">
 <%- include('templates/css'); %>
 <body>
+    <%- include('templates/header'); %>
     <form action="/login" method="post">
       <input type="text" name="email" placeholder="Enter your Email" />
       <input type="password" name="password" placeholder="Enter your password" />
       <input type="submit" value="Login" />
     </form>
+    <%- include('templates/footer'); %>
 </body>
 </html>
