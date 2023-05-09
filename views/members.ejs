@@ -1,0 +1,25 @@
+<%- include('templates/css'); %>
+<%- include('templates/header'); %>
+<body>
+    
+    <div class="container">
+        <div class="row" style="text-align: center;"> <h1>Welcome, <%= username %> </h1></div>
+        <div class="row">
+            <div class="col-sm">
+                <img style="" src="001.png" alt="png">
+            </div>
+            <div class="col-sm">
+                <img src="002.png" alt="png">
+            </div>
+            <div class="col-sm">
+                <img src="003.png" alt="png">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="window.location.href='/logout'"> Logout
+            </button>
+            <br>
+        </div>
+    </div>
+    
+</body>
+
+<%- include('templates/footer'); %>

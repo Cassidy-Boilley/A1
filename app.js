@@ -6,9 +6,12 @@ const bcrypt = require('bcrypt');
 const Joi = require('joi');
 var MongoDBStore = require('connect-mongodb-session')(session);
 const dotenv = require('dotenv');
+const e = require('express');
 dotenv.config();
 
 app.use(express.urlencoded({ extended: false }));
+
+app.set('view engine', 'ejs');
 
 var dbStore = new MongoDBStore({
   uri: process.env.MONGODB_CONNECTION_STRING,
@@ -26,39 +29,23 @@ app.use(session({
 // public routes
 app.get('/', (req, res) => {
   if (!req.session.GLOBAL_AUTHENTICATED) {
-    res.send(`<button><a href='/login' class='button'> Login </a></button> <br> <button><a href='/signup' class='button'> Signup </a></button>`);
+    res.render('app.ejs', {
+      "username": req.session.loggedUsername
+    });
   } else {
-    console.log(req.session);
-    res.send(`
-    <h1> Welcome ${req.session.loggedUsername} </h1>
-    <br>
-    <a href='/members' class='button'> Go to members area </a>
-    <button><a href='/logout' class='button'> Logout </a></button>
-  `)
-  
+    res.render('authenticated.ejs', {
+      "username": req.session.loggedUsername
+    });
   }
+  
 });
 
 app.get('/login', (req, res) => {
-  res.send(`
-    <form action="/login" method="post">
-      <input type="text" name="email" placeholder="Enter your Email" />
-      <input type="password" name="password" placeholder="Enter your password" />
-      <input type="submit" value="Login" />
-    </form>
-  `)
-
+  res.render('login.ejs');
 });
 
 app.get('/signup', (req, res) => {
-  res.send(`
-    <form action="/signup" method="post">
-      <input type="text" name="name" placeholder="Enter your username" />
-      <input type="text" name="email" placeholder="Enter your email" />
-      <input type="text" name="password" placeholder="Enter your password" />
-      <input type="submit" value="Signup" />
-    </form>
-  `)
+  res.render('signup.ejs');
 
 });
 
@@ -148,7 +135,8 @@ app.post('/signup', async (req, res) => {
             const newUser = new usersModel({
                 name: req.body.name,
                 email: req.body.email,
-                password: newUserPassword
+                password: newUserPassword,
+                type: "user"
             });
             console.log('Registered successfully.');
             await newUser.save();
@@ -183,22 +171,66 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
-app.get('/members', (req, res) => {
-  if(req.session.GLOBAL_AUTHENTICATED){
-    const randomImageNumber = Math.floor(Math.random() * 3) + 1;
-    const imageName = `00${randomImageNumber}.png`
+app.get('/admin', async(req, res) => {
+  const result = await usersModel.find({},({ name: 1, type: 1, _id: 1}));
+  // if (!req.session.GLOBAL_AUTHENTICATED) {
+  //   res.redirect('/login');
+  // } else if (req.session.type == "admin") {
+  console.log(result);
+  console.log(req.session.type);
+  res.render('admin.ejs', {
+    users: result
+  });
+  // } else {
+  //   res.send(`
+  //   Not authorized to view this page.
+  //   `);
+  //}
+ 
+});
 
-    res.send(`
-      <h1> Hello ${req.session.loggedUsername} </h1>
-      <br>
-      <img src="${imageName}" />
-      <a href='/logout' class='button'> Logout </a>
-      `)
+app.get('/members', (req, res) => {
+  
+  if(req.session.GLOBAL_AUTHENTICATED){
+    
+    res.render('members.ejs', {
+      username: req.session.loggedUsername
+    });
+
   } else {
     res.redirect('/');
   }
   
 });
+
+app.post("admin/promote", async (req, res) => {
+  const userId = req.body;
+  console.log(userId.userId);
+  try {
+      console.log(userId.userId);
+        const result = await usersModel.updateOne(
+            { _id: userId.userId },
+            { $set: { type: "admin" } }
+        );
+        res.redirect("/admin");
+    } catch (error) {
+        res.send("An error happened, please try again");
+    }
+});
+
+app.post("admin/demote", async (req, res) => {
+  const userId = req.body;
+    try {
+        const result = await usersModel.updateOne(
+            { _id: userId.userId },
+            { $set: { type: "user" } }
+        );
+        res.redirect("/admin");
+    } catch (error) {
+        res.send("An error happened, please try again");
+    }
+});
+
 
 app.get('*', (req, res) => {
   res.status(404).send('<h1> 404 Page not found</h1>');
