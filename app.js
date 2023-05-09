@@ -91,6 +91,7 @@ app.post('/login', async (req, res) => {
       req.session.loggedUsername = result?.name;
       req.session.loggedEmail = req.body.email;
       req.session.loggedPassword = req.body.password;
+      req.session.loggedType = result.type;
 
       var hour = 3600000;
       req.session.cookie.expires = new Date(Date.now() + (hour));
@@ -172,20 +173,19 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/admin', async(req, res) => {
-  const result = await usersModel.find({},({ name: 1, type: 1, _id: 1}));
-  // if (!req.session.GLOBAL_AUTHENTICATED) {
-  //   res.redirect('/login');
-  // } else if (req.session.type == "admin") {
-  console.log(result);
-  console.log(req.session.type);
-  res.render('admin.ejs', {
-    users: result
-  });
-  // } else {
-  //   res.send(`
-  //   Not authorized to view this page.
-  //   `);
-  //}
+  const result = await usersModel.find({});
+  if (!req.session.GLOBAL_AUTHENTICATED) {
+    res.redirect('/login');
+  } else if (req.session.loggedType == "admin") {
+
+    res.render('admin.ejs', {
+      users: result
+    });
+  } else {
+    res.send(`
+  Not authorized to view this page.
+     `);
+  }
  
 });
 
@@ -203,22 +203,20 @@ app.get('/members', (req, res) => {
   
 });
 
-app.post("admin/promote", async (req, res) => {
+app.post("/admin/promote", async (req, res) => {
   const userId = req.body;
-  console.log(userId.userId);
   try {
-      console.log(userId.userId);
         const result = await usersModel.updateOne(
             { _id: userId.userId },
             { $set: { type: "admin" } }
-        );
+    );
         res.redirect("/admin");
     } catch (error) {
         res.send("An error happened, please try again");
     }
 });
 
-app.post("admin/demote", async (req, res) => {
+app.post("/admin/demote", async (req, res) => {
   const userId = req.body;
     try {
         const result = await usersModel.updateOne(
